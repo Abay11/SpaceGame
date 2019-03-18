@@ -3,19 +3,34 @@ package com.example.adygha.spacegame;
 import android.content.Context;
 
 public class Ship extends SpaceBody {
-    public Ship(Context context) {
-        bitmapId = R.drawable.starship; // определяем начальные параметры
+    int current_frame;
+    int nframes;
 
-        size = 5;
+    public Ship(Context context) {
+        size = 8;
         x=10;
         y=GameView.maxY - size - 1;
-        speed = (float) 0.2;
+        speed = 0.2f;
 
-        init(context); // инициализируем корабль
+        nframes = 8;
+
+        int bitmapIDs[] = new int[nframes];
+
+        bitmapIDs[0] = R.drawable.ship_1;
+        bitmapIDs[1] = R.drawable.ship_2;
+        bitmapIDs[2] = R.drawable.ship_3;
+        bitmapIDs[3] = R.drawable.ship_4;
+        bitmapIDs[4] = R.drawable.ship_5;
+        bitmapIDs[5] = R.drawable.ship_6;
+        bitmapIDs[6] = R.drawable.ship_7;
+        bitmapIDs[7] = R.drawable.ship_8;
+
+        init(context, nframes, bitmapIDs); // инициализируем корабль
     }
 
     @Override
     public void update() { // перемещаем корабль в зависимости от нажатой кнопки
+
         if(GameActivity.isLeftPressed && x >= 0){
             x -= speed;
         }
@@ -30,5 +45,12 @@ public class Ship extends SpaceBody {
         {
             y += speed;
         }
+
+        if(++current_frame >= nframes)
+        {
+            current_frame = 0;
+        }
+
+        bitmap = animations[current_frame];
     }
 }

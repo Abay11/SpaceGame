@@ -95,12 +95,18 @@ public class GameView extends SurfaceView implements Runnable{
         while (gameRunning)
         {
             update();
+
             removeHiddenBodies(asteroids);
             removeHiddenBodies(bullets);
+
             draw();
+
             checkCollision();
+
             checkIfNewAsteroid();
+
             checkIfLevelUp();
+
             control();
         }
         showGameOverDialog();

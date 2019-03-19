@@ -7,7 +7,7 @@ public class Bullet extends SpaceBody {
         bitmapId = R.drawable.bullet;
         y = shipY;
         x = shipX;
-        size = 1;
+        size = 3;
         speed = 0.3f;
 
         init(context);

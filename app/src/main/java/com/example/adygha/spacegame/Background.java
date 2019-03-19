@@ -24,7 +24,7 @@ public class Background {
             "drawable", context.getPackageName());
 
          // Load the bitmap using the id
-         bitmap = BitmapFactory.decodeResource(context.getResources(), resID);
+
 
         // Which version of background (reversed or regular)
         // is currently drawn first (on left)
@@ -45,16 +45,13 @@ public class Background {
         height = screenHeight;
 
         // Create the bitmap
+        bitmap = BitmapFactory.decodeResource(context.getResources(), resID);
         bitmap = Bitmap.createScaledBitmap(bitmap, screenWidth, screenHeight,true);
-
-        // Save the width and height for later use
-
 
         //Create a mirror image of the background (horizontal flip)
         Matrix matrix = new Matrix();
         matrix.setScale(-1, 1);
         bitmapReversed = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
-
 }
 
     public void update()

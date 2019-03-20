@@ -64,16 +64,6 @@ public class GameView extends SurfaceView implements Runnable{
         alphaPaint = new Paint();
         alphaPaint.setAlpha(35);
 
-
-//        Bitmap cBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
-//        background = Bitmap.createScaledBitmap(
-//                cBitmap, 1080, 1920, false);
-//        cBitmap.recycle();
-
-//        background = Bitmap.createScaledBitmap(
-//                cBitmap, (int)(size * GameView.unitW), (int)(size * GameView.unitH), false);
-//        cBitmap.recycle();
-
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -206,8 +196,16 @@ public class GameView extends SurfaceView implements Runnable{
                 asteroid.update();
             }
 
-            for(Bullet bullet : bullets)
-                bullet.update();
+            for(int i=0; i<bullets.size();)
+            {
+                if(bullets.get(i).isTimeToLeft)
+                    bullets.remove(i);
+                else
+                {
+                    bullets.get(i).update();
+                    ++i;
+                }
+            }
 
             background.update();
         }
@@ -229,9 +227,6 @@ public class GameView extends SurfaceView implements Runnable{
             }
 
             canvas = surfaceHolder.lockCanvas(); // закрываем canvas
-//            canvas.drawColor(Color.YELLOW); // заполняем фон чёрным
-
-//            canvas.drawBitmap(background., 0f, 0f, paint);
 
             drawBackground();
 
@@ -298,21 +293,18 @@ public class GameView extends SurfaceView implements Runnable{
             }
 
 
-        //получаем размер массивов
-        int asteroidsArraySize = asteroids.size();
-        int bulletsArraySize = bullets.size();
-
         //проверяем столкновение астероидов с пулями
-        for(int i=0; i<asteroidsArraySize;) {
-            for (int j = 0; j < bulletsArraySize; ) {
-                if (asteroids.get(i).isCollision(bullets.get(j).x, bullets.get(j).y, bullets.get(j).size)) {
+        for(int i=0; i<asteroids.size();) {
+            for (int j = 0; j < bullets.size(); ) {
+                if (asteroids.get(i).isCollision(bullets.get(j).x, bullets.get(j).y, bullets.get(j).size)
+                        && !bullets.get(j).getIsExploded()) {
                     //при столкновении, удаляем и астероид, и пулю
                     asteroids.remove(i);
-                    bullets.remove(j);
 
-                    //после удаления уменьшяем размер массивов на 1
-                    asteroidsArraySize = asteroidsArraySize - 1;
-                    bulletsArraySize = bulletsArraySize - 1;
+                    //непосредственно здесь пулю удалять не нужно,
+                    //но нужно указать ему, что он столкнулся с астероидом,
+                    //и что нужно запустить анимацию взрыва
+                    bullets.get(j).setExploded();
 
                     break; //переходим к следующему астероиду
                 } else {

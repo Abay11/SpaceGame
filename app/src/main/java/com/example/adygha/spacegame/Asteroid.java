@@ -8,6 +8,9 @@ import android.graphics.Matrix;
 import java.util.Random;
 
 public class Asteroid extends SpaceBody {
+
+    protected long last_update;
+
     public Asteroid(Context context) {
         Random random = new Random();
 
@@ -49,18 +52,24 @@ public class Asteroid extends SpaceBody {
             animations[i] = Bitmap.createBitmap(animations[i - 1], 0, 0, width, height, matrix, false);
         }
 
-
-//        init(context);
+        last_update = System.currentTimeMillis();
     }
 
     @Override
     public void update() {
         y += speed;
 
-        if(++current_frame >= nframes)
-            current_frame = 0;
 
-        bitmap = animations[current_frame];
+
+        if(System.currentTimeMillis() - last_update > 30) {
+
+            if(++current_frame >= nframes)
+                current_frame = 0;
+
+            bitmap = animations[current_frame];
+
+            last_update = System.currentTimeMillis();
+        }
     }
 
     public boolean isCollision(float shipX, float shipY, float shipSize) {

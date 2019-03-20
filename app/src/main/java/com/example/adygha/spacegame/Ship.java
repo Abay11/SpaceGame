@@ -3,8 +3,6 @@ package com.example.adygha.spacegame;
 import android.content.Context;
 
 public class Ship extends SpaceBody {
-    int current_frame;
-    int nframes;
 
     public Ship(Context context) {
         size = 8;

@@ -59,8 +59,6 @@ public class Asteroid extends SpaceBody {
     public void update() {
         y += speed;
 
-
-
         if(System.currentTimeMillis() - last_update > 30) {
 
             if(++current_frame >= nframes)

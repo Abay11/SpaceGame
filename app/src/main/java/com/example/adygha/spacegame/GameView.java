@@ -42,6 +42,7 @@ public class GameView extends SurfaceView implements Runnable{
     private Thread gameThread = null;
     private Paint paint;
     private Paint alphaPaint;
+    private Paint textPaint;
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
     private ControlButtons controls;
@@ -53,6 +54,8 @@ public class GameView extends SurfaceView implements Runnable{
 
     private AlertDialog gameoverDialog=null;
 
+    private int score;
+
     public GameView(Context context) {
         super(context);
         this.context=context;
@@ -61,8 +64,16 @@ public class GameView extends SurfaceView implements Runnable{
         surfaceHolder = getHolder();
 
         paint = new Paint();
+
         alphaPaint = new Paint();
         alphaPaint.setAlpha(35);
+
+        textPaint = new Paint();
+        textPaint.setTextSize(25);
+        textPaint.setTextAlign(Paint.Align.LEFT);
+        textPaint.setColor(Color.WHITE);
+        textPaint.setAntiAlias(true);
+
 
         gameThread = new Thread(this);
         gameThread.start();
@@ -224,11 +235,16 @@ public class GameView extends SurfaceView implements Runnable{
 
                 background = new Background(context, surfaceHolder.getSurfaceFrame().width(),
                         surfaceHolder.getSurfaceFrame().height());
+
+                score = 0;
             }
 
             canvas = surfaceHolder.lockCanvas(); // закрываем canvas
 
             drawBackground();
+
+            //выводим очки на экран
+            canvas.drawText("Scores: " + score, 10, 30, textPaint);
 
             ship.drow(paint, canvas); // рисуем корабль
             controls.drow(paint, canvas); //рисуем кнопки
@@ -298,7 +314,11 @@ public class GameView extends SurfaceView implements Runnable{
             for (int j = 0; j < bullets.size(); ) {
                 if (asteroids.get(i).isCollision(bullets.get(j).x, bullets.get(j).y, bullets.get(j).size)
                         && !bullets.get(j).getIsExploded()) {
-                    //при столкновении, удаляем и астероид, и пулю
+                    //увеличиваем набранные очки
+                    ++score;
+                    Log.d(TAG, "Score: " + score);
+
+                    //при столкновении, удаляем астероид
                     asteroids.remove(i);
 
                     //непосредственно здесь пулю удалять не нужно,
